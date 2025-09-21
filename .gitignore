@@ -1,0 +1,36 @@
+﻿# VS / Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build
+**/bin/
+**/obj/
+**/out/
+
+# Logs / caches
+*.log
+*.cache
+*.vsidx
+
+# dotnet
+*.nupkg
+*.snupkg
+
+# DB & local data
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Env & local settings
+.env
+appsettings.Development.json
+appsettings.*.Local.json
+appsettings.Development.local.json
+
+# Node (если где-то есть фронт)
+node_modules/
