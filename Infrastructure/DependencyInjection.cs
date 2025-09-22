@@ -3,6 +3,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Infrastructure
 {
@@ -11,7 +12,8 @@ namespace Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration cfg)
         {
             services.AddDbContext<AppDbContext>(o =>
-                o.UseNpgsql(cfg.GetConnectionString("Default")));
+                o.UseNpgsql(cfg.GetConnectionString("Default"))
+                 .UseSnakeCaseNamingConvention());
 
             services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
             services
@@ -22,7 +24,6 @@ namespace Infrastructure
                o.Password.RequireNonAlphanumeric = false;
                o.Password.RequiredLength = 4;
 
-               // Лок-аут: включаем и задаём пороги
                o.Lockout.AllowedForNewUsers = true;
                o.Lockout.MaxFailedAccessAttempts = 5;
                o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);

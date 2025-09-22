@@ -1,9 +1,11 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
+using Domain.Options;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Application.Auth.Commands.LoginCommand
 {
@@ -12,11 +14,10 @@ namespace Application.Auth.Commands.LoginCommand
         private readonly UserManager<ApplicationUser> _users;
         private readonly IJwtTokenService _jwt;
         private readonly IAppDbContext _db;
-        private readonly IConfiguration _cfg;
-
-        public LoginCommandHandler(UserManager<ApplicationUser> users, IJwtTokenService jwt, IAppDbContext db, IConfiguration cfg)
+        IOptions<JwtOptions> _opts;
+        public LoginCommandHandler(UserManager<ApplicationUser> users, IJwtTokenService jwt, IAppDbContext db, IOptions<JwtOptions> opts)
         {
-            _users = users; _jwt = jwt; _db = db; _cfg = cfg;
+            _users = users; _jwt = jwt; _db = db; _opts = opts; 
         }
 
         public async Task<string> Handle(LoginCommand r, CancellationToken ct)
@@ -47,10 +48,10 @@ namespace Application.Auth.Commands.LoginCommand
             await _users.ResetAccessFailedCountAsync(user);
             await LogAttempt(r.Login, success: true, "OK", ct);
 
-            var lifetime = TimeSpan.FromHours(2);
-            var issuer = _cfg["Jwt:Issuer"]!;
-            var audience = _cfg["Jwt:Audience"]!;
-            var key = _cfg["Jwt:SigningKey"]!;
+            var lifetime = TimeSpan.FromMinutes(_opts.Value.AccessMinutes);
+            var issuer = _opts.Value.Issuer!;
+            var audience = _opts.Value.Audience!;
+            var key = _opts.Value.Secret!;
             var token = _jwt.IssueToken(user.Id, user.UserName!, out var jti, lifetime, issuer, audience, key);
 
             _db.Sessions.Add(new Session

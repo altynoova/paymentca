@@ -1,47 +1,38 @@
-services:
+﻿services:
   db:
     image: postgres:16
-    container_name: paymentca_db
+    container_name: paymentsca_db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 0909
-      POSTGRES_DB: paymentca
+      POSTGRES_PASSWORD: "0909"
+      POSTGRES_DB: paymentsca
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d paymentca"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d paymentsca"]
       interval: 5s
       timeout: 5s
       retries: 20
-
-  redis:
-    image: redis:7
-    container_name: paymentca_redis
-    ports:
-      - "6379:6379"
 
   api:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    container_name: paymentca_api
+    container_name: paymentsca_api
     environment:
       ASPNETCORE_ENVIRONMENT: Docker
-      ConnectionStrings__Default: Host=db;Port=5432;Database=paymentca;Username=postgres;Password=0909
-      Jwt__Issuer: paymentca-api
-      Jwt__Audience: paymentca-api-clients
-      Jwt__Secret: super_long_random_secret_change_me_please_0123456789
-      Jwt__AccessMinutes: "120"
-      Redis__Configuration: redis:6379
+      ConnectionStrings__Default: Host=db;Port=5432;Database=paymentsca;Username=postgres;Password=0909
+      JwtOptions__Issuer: paymentsauth-api
+      JwtOptions__Audience: paymentsauth-api-clients
+      JwtOptions__Secret: HIS_IS_PAYMENTAUTHAPI_SECRET_KEY_1234567890
+      JwtOptions__AccessMinutes: "120"
     ports:
       - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
 
 volumes:
   pgdata:
