@@ -3,12 +3,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # копируем csproj для кэширования restore
-COPY ./Application/Application.csproj ./Application/
-COPY ./Domain/Domain.csproj ./Domain/
-COPY ./Infrastructure/Infrastructure.csproj ./Infrastructure/
-COPY ./PaymentCA/WebApi.csproj ./PaymentCA/
+COPY Application/Application.csproj Application/
+COPY Domain/Domain.csproj Domain/
+COPY Infrastructure/Infrastructure.csproj Infrastructure/
+COPY PaymentCA/WebApi.csproj PaymentCA/
 
-RUN dotnet restore ./PaymentCA/WebApi.csproj
+RUN dotnet restore PaymentCA/WebApi.csproj
 
 # копируем весь исходный код
 COPY . .
