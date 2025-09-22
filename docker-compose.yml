@@ -4,7 +4,7 @@
     container_name: paymentsca_db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "0909"
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: paymentsca
     ports:
       - "5432:5432"
@@ -23,7 +23,7 @@
     container_name: paymentsca_api
     environment:
       ASPNETCORE_ENVIRONMENT: Docker
-      ConnectionStrings__Default: Host=db;Port=5432;Database=paymentsca;Username=postgres;Password=0909
+      ConnectionStrings__Default: Host=db;Port=5432;Database=paymentsca;Username=postgres;Password=postgres
       JwtOptions__Issuer: paymentsauth-api
       JwtOptions__Audience: paymentsauth-api-clients
       JwtOptions__Secret: HIS_IS_PAYMENTAUTHAPI_SECRET_KEY_1234567890
