@@ -19,7 +19,7 @@
   api:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: ./Dockerfile
     container_name: paymentsca_api
     environment:
       ASPNETCORE_ENVIRONMENT: Docker
